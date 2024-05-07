@@ -1,0 +1,39 @@
+.site {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    max-width: 1500px;
+    width: 100%;
+    padding: 0 30px;
+    margin: 0 auto;
+}
+
+.login {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.hero {
+    flex: 1 0 66.6666%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding: 70px 0;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 15%;
+        left: 0;
+        width: 280px;
+        height: 100px;
+        background: linear-gradient(to right, #4460f1, #c471ed, #f64f59);
+        z-index: -1;
+        filter: blur(70px);
+    }
+}

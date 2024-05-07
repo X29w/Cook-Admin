@@ -1,3 +1,4 @@
+import FoodButtonModal from '@/components/FoodButtonModal';
 import {
   PageContainer,
   ProColumns,
@@ -15,16 +16,19 @@ const Vegetable: React.FC<unknown> = () => {
       title: '蔬菜价格',
       dataIndex: 'price',
       sorter: true,
+      hideInSearch: true,
     },
     {
       title: '蔬菜图片',
       dataIndex: 'image',
       valueType: 'image',
+      hideInSearch: true,
     },
     {
       title: '蔬菜描述',
       dataIndex: 'description',
       valueType: 'textarea',
+      hideInSearch: true,
     },
     {
       title: '保质期至',
@@ -34,6 +38,7 @@ const Vegetable: React.FC<unknown> = () => {
       title: '剩余过期时长',
       dataIndex: 'expireTime',
       sorter: true,
+      hideInSearch: true,
     },
     {
       title: '是否已过期',
@@ -63,9 +68,7 @@ const Vegetable: React.FC<unknown> = () => {
         params={{
           type: 'vegetable',
         }}
-        request={async (params, sort) => {
-          console.log(params);
-
+        request={async () => {
           return {
             data: [
               {
@@ -86,16 +89,13 @@ const Vegetable: React.FC<unknown> = () => {
           };
         }}
         rowKey="id"
-        search={false}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
           defaultPageSize: 10,
         }}
         toolBarRender={() => [
-          <Button type="primary" key="button">
-            新建蔬菜
-          </Button>,
+          <FoodButtonModal key="create" buttonText="新增蔬菜" />,
         ]}
       />
     </PageContainer>

@@ -6,6 +6,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   request: {},
+  tailwindcss:{},
   layout: {
     title: '方圆小厨房',
   },
@@ -13,6 +14,11 @@ export default defineConfig({
     {
       path: '/',
       redirect: '/vegetable-management',
+    },
+    {
+      path: '/login',
+      component: './Login',
+      layout: false,
     },
     {
       name: '蔬菜管理',
@@ -28,6 +34,10 @@ export default defineConfig({
       name: '肉类管理',
       path: '/meat-management',
       component: './Meat',
+    },
+    {
+      path: '/*',
+      component: './404',
     },
   ],
   npmClient: 'pnpm',
