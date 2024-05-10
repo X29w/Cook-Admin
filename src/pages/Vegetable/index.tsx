@@ -1,9 +1,7 @@
+import { getfoodList } from '@/api';
 import FoodButtonModal from '@/components/FoodButtonModal';
-import {
-  PageContainer,
-  ProColumns,
-  ProTable,
-} from '@ant-design/pro-components';
+import WrapContainer from '@/components/WrapContainer';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Popconfirm } from 'antd';
 
 const Vegetable: React.FC<unknown> = () => {
@@ -60,32 +58,17 @@ const Vegetable: React.FC<unknown> = () => {
   ];
 
   return (
-    <PageContainer>
+    <WrapContainer>
       <ProTable
         headerTitle="蔬菜管理"
         columns={columns}
         cardBordered
-        params={{
-          type: 'vegetable',
-        }}
-        request={async () => {
+        request={async (params) => {
+          const res = await getfoodList(params, '/vegetable/list');
           return {
-            data: [
-              {
-                name: '蔬菜1',
-                price: 10,
-                image:
-                  'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-                description: '蔬菜描述',
-                shelfLife: '2022-01-01',
-                expireTime: '2022-01-01',
-                id: '1',
-                expired: true,
-                createdAt: '2022-01-01',
-                updatedAt: '2022-01-01',
-              },
-            ],
-            success: true,
+            data: res.data,
+            success: res.success,
+            total: res.data?.totalCount,
           };
         }}
         rowKey="id"
@@ -98,7 +81,7 @@ const Vegetable: React.FC<unknown> = () => {
           <FoodButtonModal key="create" buttonText="新增蔬菜" />,
         ]}
       />
-    </PageContainer>
+    </WrapContainer>
   );
 };
 
