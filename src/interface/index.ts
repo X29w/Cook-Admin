@@ -1,3 +1,4 @@
+import { ActionType, ProCoreActionType } from '@ant-design/pro-components';
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
 /**
@@ -63,3 +64,23 @@ export interface RegisterParamsINT {
 }
 
 export type UserAuthority = LoginParamsINT | RegisterParamsINT;
+
+export type foodCreateFetchUrl = '/vegetable/create' | '/fruit' | '/meat';
+
+export interface FoodParamsINT {
+  name: string;
+  price: number;
+  image?: string;
+  description?: string;
+  shelfLife: string;
+}
+
+export interface FoodModalINT {
+  buttonText?: string;
+  modalTitle?: string;
+  key?: React.Key;
+  url?: foodCreateFetchUrl;
+  action?: ActionType;
+}
+
+export type TabelColumnsAction = ProCoreActionType | undefined;

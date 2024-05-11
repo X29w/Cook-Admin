@@ -1,4 +1,4 @@
-import { checkStatusApi } from '@/api';
+import { checkStatusAPI } from '@/api';
 import { useEffect, useState, type FC } from 'react';
 import ServiceErrorFallBack from './ServiceErrorFallBack';
 
@@ -16,7 +16,7 @@ const CheckResponse: FC<CheckResponseProps> = ({
   //#region 检查组件状态
   const checkStatus = async () => {
     try {
-      const res = await checkStatusApi();
+      const res = await checkStatusAPI();
       setErrorStatus(res.success ? false : true);
     } catch (error) {
       setErrorStatus(true);

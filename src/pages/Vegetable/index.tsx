@@ -1,10 +1,24 @@
-import { getfoodList } from '@/api';
-import FoodButtonModal from '@/components/FoodButtonModal';
+import { deletefoodAPI, getfoodList } from '@/api';
+import FoodCreateButtonModal from '@/components/FoodCreateButtonModal';
+import FoodUpdateButtonModal from '@/components/FoodUpdateButtonModal';
 import WrapContainer from '@/components/WrapContainer';
+import { TabelColumnsAction } from '@/interface';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Popconfirm } from 'antd';
+import { Button, Popconfirm, message } from 'antd';
 
 const Vegetable: React.FC<unknown> = () => {
+  //#region 删除食物
+  const handleDelete = async (id: number, action: TabelColumnsAction) => {
+    try {
+      const res = await deletefoodAPI(`/vegetable/${id}`);
+      if (res.success) {
+        message.success('删除成功');
+        action?.reload();
+      }
+    } catch (error) {}
+  };
+  //#endregion
+
   const columns: ProColumns[] = [
     {
       title: '蔬菜名称',
@@ -48,9 +62,19 @@ const Vegetable: React.FC<unknown> = () => {
       valueType: 'option',
       fixed: 'right',
       width: 80,
-      render: (dom, entity) => [
-        <Button key="editable">编辑</Button>,
-        <Popconfirm title={`是否删除 ${entity.name}`} key="deleteable">
+      render: (dom, entity, index, action) => [
+        <FoodUpdateButtonModal
+          key="update"
+          updateUrl={`/vegetable/${entity?.id}`}
+          entity={entity}
+          action={action}
+          initialFormValues={entity}
+        />,
+        <Popconfirm
+          title={`是否删除 ${entity.name}`}
+          key="deleteable"
+          onConfirm={async () => await handleDelete(entity.id, action)}
+        >
           <Button danger>删除</Button>
         </Popconfirm>,
       ],
@@ -66,9 +90,9 @@ const Vegetable: React.FC<unknown> = () => {
         request={async (params) => {
           const res = await getfoodList(params, '/vegetable/list');
           return {
-            data: res.data,
+            data: res.data?.vegetables,
             success: res.success,
-            total: res.data?.totalCount,
+            total: res.data?.totalCount?.totalCount,
           };
         }}
         rowKey="id"
@@ -77,8 +101,13 @@ const Vegetable: React.FC<unknown> = () => {
           showQuickJumper: true,
           defaultPageSize: 10,
         }}
-        toolBarRender={() => [
-          <FoodButtonModal key="create" buttonText="新增蔬菜" />,
+        toolBarRender={(action) => [
+          <FoodCreateButtonModal
+            action={action}
+            key="create"
+            buttonText="新增蔬菜"
+            url="/vegetable/create"
+          />,
         ]}
       />
     </WrapContainer>

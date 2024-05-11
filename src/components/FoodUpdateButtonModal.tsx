@@ -1,52 +1,49 @@
+import { updateFoodAPI } from '@/api';
 import { MODALWIDTH } from '@/constants';
-import { getUUid } from '@/utils';
-import { PlusOutlined } from '@ant-design/icons';
+import { FoodModalINT, FoodParamsINT } from '@/interface';
 import {
   ModalForm,
   ProFormDatePicker,
   ProFormDigit,
   ProFormText,
   ProFormTextArea,
-  ProFormUploadDragger,
+  ProRequestData,
 } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { type FC } from 'react';
 
-interface FoodButtonModalProps {
-  buttonText?: string;
-  modalTitle?: string;
-  key?: React.Key;
+interface FoodUpdateButtonModalProps extends FoodModalINT {
+  initialFormValues?:
+    | ProRequestData<Record<string, any>, Record<string, any>>
+    | undefined;
+  entity?: any;
+  updateUrl?: string;
 }
 
-interface FoodFormProps {
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-  shelfLife: string;
-}
-
-const FoodButtonModal: FC<FoodButtonModalProps> = ({
-  buttonText = '新建表单',
-  modalTitle = buttonText,
-  key = getUUid(),
+const FoodUpdateButtonModal: FC<FoodUpdateButtonModalProps> = ({
+  buttonText = '编辑',
+  entity,
+  modalTitle = `${buttonText} ${entity?.name}`,
+  updateUrl,
+  action,
+  initialFormValues = {},
 }) => {
   //#region 处理Modal关闭成功事件
-  const handleModalFinish = async (values: Record<string, any>) => {
-    console.log('values=============', values);
+  const handleModalFinish = async (data: Record<string, any>) => {
+    data.price = Number(data.price);
+    try {
+      const res = await updateFoodAPI(updateUrl!, data);
+      if (res.success) {
+        action?.reload();
+        return true;
+      }
+    } catch (error) {}
   };
   //#endregion
-
   return (
-    <ModalForm<FoodFormProps>
-      key={key}
+    <ModalForm<FoodParamsINT>
       title={modalTitle}
-      trigger={
-        <Button type="primary">
-          <PlusOutlined />
-          {buttonText}
-        </Button>
-      }
+      trigger={<Button>{buttonText}</Button>}
       autoFocusFirstInput={false}
       modalProps={{
         destroyOnClose: true,
@@ -61,6 +58,7 @@ const FoodButtonModal: FC<FoodButtonModalProps> = ({
           span: 12,
         },
       }}
+      request={async () => initialFormValues as any}
       onFinish={async (values) => await handleModalFinish(values)}
     >
       <ProFormText
@@ -91,9 +89,9 @@ const FoodButtonModal: FC<FoodButtonModalProps> = ({
           maxLength: 200,
         }}
       />
-      <ProFormUploadDragger name="image" label="图片" />
+      <ProFormText name="image" label="图片" />
     </ModalForm>
   );
 };
 
-export default FoodButtonModal;
+export default FoodUpdateButtonModal;

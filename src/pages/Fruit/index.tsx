@@ -1,4 +1,4 @@
-import FoodButtonModal from '@/components/FoodButtonModal';
+import FoodCreateButtonModal from '@/components/FoodCreateButtonModal';
 import {
   PageContainer,
   ProColumns,
@@ -96,7 +96,7 @@ const Fruit: FC<unknown> = () => {
           defaultPageSize: 10,
         }}
         toolBarRender={() => [
-          <FoodButtonModal key="create" buttonText="新增水果" />,
+          <FoodCreateButtonModal key="create" buttonText="新增水果" />,
         ]}
       />
     </PageContainer>

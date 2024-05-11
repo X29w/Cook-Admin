@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { history } from '@/.umi/exports';
+import { loginUserAPI, registerUserAPI } from '@/api';
 import Block from '@/components/Block';
 import { UserAuthority } from '@/interface';
+import { saveItemToLocal } from '@/utils';
 import { LoginForm } from '@ant-design/pro-components';
-import { Form, Tabs, Typography } from 'antd';
+import { Form, Tabs, Typography, message } from 'antd';
 import { useState, type FC } from 'react';
 import LoginTab from './components/LoginTab';
 import RegisterTab from './components/RegisterTab';
@@ -12,16 +16,43 @@ const Login: FC<unknown> = () => {
   const [loginType, setLoginType] = useState<string>('loginTab');
   const [form] = Form.useForm();
 
+  //#region 登陆/注册表单
+  //#region 登录
+  const handleLogin = async (data: UserAuthority) => {
+    const res = await loginUserAPI(data);
+    if (res.success) {
+      saveItemToLocal('Authorization', res.data.accessToken);
+      history.push('/');
+      message.success('登录成功');
+    }
+  };
+  //#endregion
+
+  //#region 注册
+  const handleRegister = async (data: UserAuthority) => {
+    const res = await registerUserAPI(data);
+    if (res.success) {
+      message.success('注册成功');
+      setLoginType('loginTab');
+    }
+  };
+  //#endregion
+
   const handleLoginForm = async (data: UserAuthority) => {
     try {
-      console.log('data', data);
+      loginType === 'loginTab'
+        ? await handleLogin(data)
+        : await handleRegister(data);
     } catch (error) {}
   };
+  //#endregion
 
+  //#region 切换tab
   const handleChangeTabs = (activeKey: string) => {
     form.resetFields();
     setLoginType(activeKey);
   };
+  //#endregion
 
   return (
     <Block className="site">
@@ -37,6 +68,11 @@ const Login: FC<unknown> = () => {
               title="Github"
               subTitle="全球最大的代码托管平台"
               onFinish={handleLoginForm}
+              submitter={{
+                searchConfig: {
+                  submitText: loginType === 'loginTab' ? '登录' : '注册',
+                },
+              }}
             >
               <Tabs
                 destroyInactiveTabPane
