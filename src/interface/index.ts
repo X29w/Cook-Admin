@@ -37,4 +37,29 @@ export interface ListParamsINT {
   keyword?: string | undefined;
 }
 
+/**
+ * 定义登录参数接口
+ *
+ * @export
+ * @interface LoginParamsINT
+ */
+export interface LoginParamsINT {
+  name: string;
+  password: string;
+}
 
+/**
+ * 定义注册参数接口
+ *
+ * @export
+ * @interface RegisterParamsINT
+ */
+export interface RegisterParamsINT {
+  name: string;
+  email: string;
+  captcha: string;
+  password?: string;
+  phone: string;
+}
+
+export type UserAuthority = LoginParamsINT | RegisterParamsINT;
